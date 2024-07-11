@@ -1,55 +1,55 @@
-name: publish-docker-images
+#name: publish-docker-images
 
-on:
-  workflow_call:
-    inputs:
-      platforms:
-        required: true
-        type: string
-      git_sha:
-        required: true
-        type: string
+#on:
+ # workflow_call:
+ #   inputs:
+  #    platforms:
+   #     required: true
+   #     type: string
+   #   git_sha:
+   #     required: true
+   #     type: string
 
-jobs:
-  on-success-push:
-    runs-on: ubuntu-latest
-    environment: development
-    steps:
-      - name: Debug Outputs (Optional)
-        run: |
-          echo "Platforms: ${{ inputs.platforms }}"
-          echo "Git SHA: ${{ inputs.git_sha }}"
+#jobs:
+#  on-success-push:
+ #   runs-on: ubuntu-latest
+  #  environment: development
+   # steps:
+    #  - name: Debug Outputs (Optional)
+     #   run: |
+      #    echo "Platforms: ${{ inputs.platforms }}"
+      #   echo "Git SHA: ${{ inputs.git_sha }}"
 
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+     # - name: Checkout Repository
+     #   uses: actions/checkout@v2
 
-      - name: Login to DockerHub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+     # - name: Login to DockerHub
+     #   uses: docker/login-action@v2
+     #   with:
+      #    username: ${{ secrets.DOCKER_USERNAME }}
+      #    password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Publish Docker Image (OpenVAS)
-        uses: docker/build-push-action@v2
-        with:
-          context: .  # Assuming your Dockerfile for OpenVAS is in the root directory
-          platforms: ${{ inputs.platforms }}
-          tags: ${{ secrets.DOCKER_USERNAME }}/greenbone-community-openvas:${{ inputs.git_sha }}-${{ inputs.platforms }}
-          push: true
+     # - name: Publish Docker Image (OpenVAS)
+     #   uses: docker/build-push-action@v2
+      #  with:
+       #   context: .  # Assuming your Dockerfile for OpenVAS is in the root directory
+       #   platforms: ${{ inputs.platforms }}
+       #   tags: ${{ secrets.DOCKER_USERNAME }}/greenbone-community-openvas:${{ inputs.git_sha }}-${{ inputs.platforms }}
+        #  push: true
 
       # Add additional steps here for building and publishing your php83 image (if applicable)
 
-  on-success-update-chart:  # Assuming your Helm chart updates based on the OpenVAS image
-    runs-on: ubuntu-latest
-    environment: development
-    needs: on-success-push  # This job depends on successful completion of "on-success-push"
-    steps:
+  #on-success-update-chart:  # Assuming your Helm chart updates based on the OpenVAS image
+  #  runs-on: ubuntu-latest
+  #  environment: development
+  #  needs: on-success-push  # This job depends on successful completion of "on-success-push"
+   # steps:
       # ... Your existing steps for updating the Helm chart values.yaml ...
 
-  on-success-notify-discord:  # Reference publish.yaml workflow (assuming it handles notifications)
-    needs: on-success-update-chart  # This job depends on successful completion of "on-success-update-chart"
-    uses: ./.github/workflows/notify.yaml  # Assuming notify.yaml handles notifications
-    secrets: inherit  # Pass all secrets
-    with:
-      pipeline: "Capstone Vulnerable (OpenVAS)"  # Update pipeline name
+  #on-success-notify-discord:  # Reference publish.yaml workflow (assuming it handles notifications)
+  #  needs: on-success-update-chart  # This job depends on successful completion of "on-success-update-chart"
+   # uses: ./.github/workflows/notify.yaml  # Assuming notify.yaml handles notifications
+   # secrets: inherit  # Pass all secrets
+   # with:
+   #   pipeline: "Capstone Vulnerable (OpenVAS)"  # Update pipeline name
       # ... Your existing notification configuration with outputs from both jobs ...
