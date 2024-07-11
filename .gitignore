@@ -1,0 +1,96 @@
+# Generic files
+*.log
+*.tmp
+*.pid
+*.swp
+*.swo
+*.bak
+*.orig
+*.rej
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependency directories
+**/node_modules
+**/bower_components
+
+# Python
+*.pyc
+*.pyo
+*.pyd
+_pycache_/
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Ruby
+*.gem
+*.rbc
+.bundle
+.config
+coverage/
+InstalledFiles
+.pkginfo
+.rvmrc
+.yardoc
+_yardoc/
+Gemfile.lock
+vendor/bundle
+vendor/cache
+vendor/rails
+vendor/ruby
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.car
+*.jpd
+*.sqlite
+*.sqlite3
+hs_err_pid*
+*.log
+
+# PHP
+composer.phar
+vendor/
+
+# VSCode
+.vscode/
+.history/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+.Trash-*
+.DS_Store?
+.AppleDouble
+.LSOverride
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Unix
+*~
+# Temporary files created by text editors
+.*.swp
+.*.swo
+.*.swn
