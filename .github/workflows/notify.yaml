@@ -48,8 +48,8 @@ jobs:
             const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/');
             await github.rest.issues.createComment({
               issue_number: 0,  // Replace with actual issue number (optional)
-              owner: owner,
-              repo: repo,
+              owner: NadaKamel03,
+              repo: context.repo.repo,
               body: `The build workflow has completed! Status: ${process.env.GITHUB_JOB_STATUS}`
             });
             console.log("Script execution completed");  // Print at script end
