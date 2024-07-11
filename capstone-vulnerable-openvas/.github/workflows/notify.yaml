@@ -1,0 +1,25 @@
+name: Notify on Build Completion
+
+on:
+  workflow_run:
+    any_of:
+      - workflow_dispatch
+      - push:
+          branches: [ main, development ]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Notify on Build Completion
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.issues.createComment({
+              issue_number: 0,
+              owner: 'NadaKamel03',
+              repo: context.repo.repo,
+              body: 'The build workflow has completed! Status: ${{ job.status }}'
+            })
