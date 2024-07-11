@@ -27,9 +27,11 @@
 name: Notify on Build Completion
 
 on:
-  workflow_dispatch:  # Trigger on manual workflow dispatch
+  workflow_dispatch: {}  # Trigger on manual workflow dispatch
   push:  # Trigger on push events
-    branches: [ main, development ]  # Only on main and development branches
+    branches:
+      - main
+      - development  # Only on main and development branches
 
 jobs:
   notify:
