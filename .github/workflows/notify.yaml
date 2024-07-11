@@ -44,11 +44,11 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            console.log("Script execution started");  # Print at script beginning
-            github.issues.createComment({
-              issue_number: 0,  # Replace with actual issue number (optional)
+            console.log("Script execution started");  // Print at script beginning
+            await github.issues.createComment({
+              issue_number: 0,  // Replace with actual issue number (optional)
               owner: 'NadaKamel03',
               repo: process.env.GITHUB_REPOSITORY.split('/')[1],
               body: 'The build workflow has completed! Status: ${{ job.status }}'
             });
-            console.log("Script execution completed");  # Print at script end
+            console.log("Script execution completed");  // Print at script end
