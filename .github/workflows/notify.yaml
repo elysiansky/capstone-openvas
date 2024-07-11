@@ -27,29 +27,26 @@
 name: Notify on Build Completion
 
 on:
-  workflow_run:
-    matches:
-      - workflow_dispatch  # Trigger on manual workflow dispatch
-      - push:  # Trigger on push events
-        branches: [ main, development ]  # Only on main and development branches
+  workflow_dispatch:  # Trigger on manual workflow dispatch
+  push:  # Trigger on push events
+    branches: [ main, development ]  # Only on main and development branches
 
 jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        # Add echo statement here to verify checkout step execution
-         echo "Checked out code"
+      - run: echo "Checked out code"  # Add echo statement here to verify checkout step execution
 
       - name: Notify on Build Completion
         uses: actions/github-script@v6
         with:
           script: |
-            echo "Script execution started"  # Print at script beginning
+            console.log("Script execution started");  # Print at script beginning
             github.issues.createComment({
               issue_number: 0,  # Replace with actual issue number (optional)
               owner: 'NadaKamel03',
-              repo: process.env.GITHUB_REPOSITORY,
+              repo: process.env.GITHUB_REPOSITORY.split('/')[1],
               body: 'The build workflow has completed! Status: ${{ job.status }}'
-            })
-            echo "Script execution completed"  # Print at script end
+            });
+            console.log("Script execution completed");  # Print at script end
