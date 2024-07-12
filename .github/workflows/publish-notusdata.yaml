@@ -39,7 +39,7 @@ jobs:
           context: .
           file: ./docker/DockerfileNotusData
           platforms: ${{ inputs.platforms }}
-          tags:  ${{ secrets.DOCKER_USERNAME }}/capstone-openvas-notusdata:${{ inputs.git_sha }}-${{ inputs.platforms }}
+          tags:  ${{ secrets.DOCKER_USERNAME }}/capstone-openvas-notus-data:${{ inputs.git_sha }}-${{ inputs.platforms }}
           push: true
           
     outputs:
@@ -59,7 +59,7 @@ jobs:
       - name: Checkout Helm Chart Repository
         uses: actions/checkout@v2
         with:
-          repository: elysiansky/capstone-chart-openvas-notusdata
+          repository: elysiansky/capstone-chart-openvas-notus-data
           ref: main # Or use the branch/tag you want to update
           token: ${{ secrets.HELM_CHART_PERSONAL_ACCESS_TOKEN }}   
       
