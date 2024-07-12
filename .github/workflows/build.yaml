@@ -1,111 +1,59 @@
-#name: build-docker-images
+name: build-docker-images
 
-#on:
- # push:
-  #  branches:
-   #   - main
-    #  - development
+on:
+  push:
+    branches:
+      - main
+      - development
 
-#env:
- # DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-  #DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-
-#jobs:
- # build:
-  #  runs-on: ubuntu-latest
-   # environment: development
-    #strategy:
-     # matrix:
-      #  platform: [amd64] # multi-architecture [amd64, arm64]
-
-    #outputs:
-     # platforms: ${{ matrix.platform }}
-      #git_sha: ${{ env.sha }}
-
-    #steps:
-      #- name: Checkout Repository
-     #   uses: actions/checkout@v2
-
-      #- name: Set up QEMU (optional for multi-arch builds)
-      #  uses: docker/setup-qemu-action@v1
-
-      #- name: Set up Docker Buildx (optional for multi-arch builds)
-      #  uses: docker/setup-buildx-action@v1
-
-      #- name: Get Git commit SHA
-       # id: git_sha
-       # run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-
-      #- name: Log in to DockerHub
-      #  run: |
-       #   echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-
-     # - name: Build Docker Image (Greenbone Community OpenVAS)
-      #  uses: docker/build-push-action@v2
-      #  with:
-       #   push: false  # Set to true to push to DockerHub if desired
-       #   tags: greenbone/openvas:latest-${{ matrix.platform }}  # Replace 'latest' with desired tag
-          # No context or file arguments needed as it pulls a pre-built image
-
-  # No publish job needed as there are no other images to build
-
-name: "Build"
-
-on: [workflow_call]
+env:
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
 jobs:
-  C:
+  build:
     runs-on: ubuntu-latest
-    container: greenbone/gvm-libs:stable
+    environment: development
+    strategy:
+      matrix:
+        platform: [amd64] # multi-architecture [amd64, arm64]
+
+    outputs:
+      platforms: ${{ matrix.platform }}
+      git_sha: ${{ env.sha }}
+
     steps:
-      - uses: actions/checkout@v4
-      - name: install dependencies
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Get Git commit SHA
+        id: git_sha
+        run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Log in to DockerHub
         run: |
-          sh .github/install-openvas-dependencies.sh
-      - name: build 
-        run: |
-          cmake -Bbuild -DCMAKE_C_COMPILER=/usr/share/clang/scan-build-14/libexec/ccc-analyzer
-          cmake --build build
-  Rust:
-    runs-on: "ubuntu-latest"
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/cache@v4
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Build Docker Image (Nginx)
+        uses: docker/build-push-action@v2
         with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            rust/target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - run: rustup update stable && rustup default stable
-        # ignore failing install, it may already be installed
-      - run: cargo install cross || true
-      - run: CROSS_CONFIG=Cross.toml cross -v build --release --target aarch64-unknown-linux-gnu
-        working-directory: rust
-      - run: CROSS_CONFIG=Cross.toml cross build --release --target x86_64-unknown-linux-gnu
-        working-directory: rust
-      - name: "patch for debian stable"
-        working-directory: rust
-        run: |
-          find . -type f -name "scannerctl"
-          patchelf --replace-needed libpcap.so.1 libpcap.so.0.8 target/aarch64-unknown-linux-gnu/release/scannerctl
-          patchelf --replace-needed libpcap.so.1 libpcap.so.0.8 target/x86_64-unknown-linux-gnu/release/scannerctl
-          patchelf --replace-needed libz.so libz.so.1 target/aarch64-unknown-linux-gnu/release/scannerctl
-          patchelf --replace-needed libz.so libz.so.1 target/x86_64-unknown-linux-gnu/release/scannerctl
-      - run: mkdir assets/
-      - run: mkdir -p assets/linux/amd64
-      - run: mkdir -p assets/linux/arm64
-      - run: mv rust/target/aarch64-unknown-linux-gnu/release/openvasd assets/linux/arm64/openvasd
-      - run: mv rust/target/x86_64-unknown-linux-gnu/release/openvasd assets/linux/amd64/openvasd
-      - run: mv rust/target/aarch64-unknown-linux-gnu/release/scannerctl assets/linux/arm64/scannerctl
-      - run: mv rust/target/x86_64-unknown-linux-gnu/release/scannerctl assets/linux/amd64/scannerctl
-      - run: mv rust/target/aarch64-unknown-linux-gnu/release/feed-verifier assets/linux/arm64/feed-verifier
-      - run: mv rust/target/x86_64-unknown-linux-gnu/release/feed-verifier assets/linux/amd64/feed-verifier
-      - name: archive
-        uses: actions/upload-artifact@v4
-        with:
-          name: rs-binaries
-          path: assets/*
-          retention-days: 1
+          context: .
+          file: ./docker/DockerfileVulnerabilityTests
+          platforms: ${{ matrix.platform }}
+          output: type=docker
+          push: false
+          tags: capstone-openvas-vulnerability-tests:${{ env.sha }}-${{ matrix.platform }}
+  
+  publish: # Reference publish.yaml workflow
+    needs: build # This job depends on the successful completion of "build"
+    uses: ./.github/workflows/publish.yaml
+    secrets: inherit # pass all secrets
+    with:
+      platforms: ${{ needs.build.outputs.platforms }}
+      git_sha: ${{ needs.build.outputs.git_sha }}
