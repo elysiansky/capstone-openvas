@@ -1,0 +1,47 @@
+# Use pre-built Greenbone OpenVAS scanner image
+#FROM greenbone/openvas-scanner
+
+# Expose OpenVAS web interface port
+#EXPOSE 443
+
+# Set OpenVAS manager password (replace with a strong password)
+#ENV OPENVAS_PASSWORD="group6"
+
+# Set working directory (optional, but recommended)
+#WORKDIR /var/lib/openvas
+
+# Run OpenVAS manager in the foreground
+#CMD ["openvasmd", "--listen=127.0.0.1,443", "--password=$OPENVAS_PASSWORD"]
+# Use greenbone/gsa base image (pre-configured with OpenVAS)
+#FROM immauss/openvas
+
+# Set environment variables (optional, can be set outside the container)
+# ENV DEBIAN_FRONTEND=noninteractive
+# ENV LANG=C.UTF-8
+
+# Update package lists (recommended for security updates)
+#RUN apt-get update
+
+# Install additional dependencies (if needed)
+# Example: Install python libraries for specific functionalities
+# RUN apt-get install -y python3-pip python3-mylibrary
+
+# Expose ports
+#EXPOSE 9392 9390
+
+# Start services (already included in greenbone/gsa image)
+#CMD ["gvmd", "--listen=0.0.0.0", "--port=9390"]
+
+# Use the base image from greenbone/vulnerability-tests
+FROM greenbone/notus-data
+
+
+# Define the volume
+VOLUME /mnt
+
+# Set working directory
+WORKDIR /mnt
+
+# Ensure the container keeps running
+CMD ["tail", "-f", "/dev/null"]
+

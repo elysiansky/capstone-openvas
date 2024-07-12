@@ -8,9 +8,16 @@ services:
     volumes:
       - vt_data_vol:/mnt
 
+  notus-data:
+    build:
+      context: .
+      dockerfile: ./docker/DockerfileNotusData
+    volumes:
+      - notus_data_vol:/mnt
+
 volumes:
   vt_data_vol:
-
+  notus_data_vol:
 
 # services:
 #   vulnerability-tests:
