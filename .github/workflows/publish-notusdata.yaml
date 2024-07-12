@@ -88,7 +88,7 @@ jobs:
 
   on-success-notify-discord: # Reference publish.yaml workflow
     needs: on-success-update-chart # This job depends on the successful completion of "on-success-update-chart"
-    uses: ./.github/workflows/notify.yaml
+    uses: ./.github/workflows/notify-notusdata.yaml
     secrets: inherit # pass all secrets
     with:
       pipeline: "Capstone Openvas NotusData"
