@@ -14,11 +14,63 @@ services:
       dockerfile: ./docker/DockerfileNotusData
     volumes:
       - notus_data_vol:/mnt
+  
+  scap-data:
+    build:
+      context: .
+      dockerfile: ./docker/DockerfileScapData
+    volumes:
+      - scap_data_vol:/mnt
+ 
+  cert-bund-data:
+    build:
+      context: .
+      dockerfile: ./docker/DockerfileCertBundData
+    volumes:
+      - cert_data_vol:/mnt
+
+  data-objects:
+    build:
+      context: .
+      dockerfile: ./docker/DockerfileDataObjects
+    volumes:
+      - data_objects_vol:/mnt
+
+  gpg-data:
+    build:
+      context: .
+      dockerfile: ./docker/DockerfileGPGData
+    volumes:
+      - gpg_data_vol:/mnt
+
+  redis-server:
+    build:
+      context: .
+      dockerfile: ./docker/DockerfileRedisServer
+    restart: on-failure
+    volumes:
+      - redis_socket_vol:/run/redis/
+
+  pg-gvm:
+    build:
+      context: .
+      dockerfile: ./docker/DockerfilePgGVM
+    restart: on-failure
+    volumes:
+      - psql_data_vol:/var/lib/postgresql
+      - psql_socket_vol:/var/run/postgresql
 
 volumes:
   vt_data_vol:
   notus_data_vol:
-
+  scap_data_vol:
+  cert_data_vol:
+  data_objects_vol:
+  gpg_data_vol:
+  redis_socket_vol:
+  psql_data_vol:
+  psql_socket_vol:
+  
 # services:
 #   vulnerability-tests:
 #     image: greenbone/vulnerability-tests
