@@ -1,0 +1,21 @@
+#FROM greenbone/gsa
+
+
+# Define the volume
+#VOLUME /mnt
+
+# Set working directory
+#WORKDIR /mnt
+
+# Ensure the container keeps running
+#CMD ["tail", "-f", "/dev/null"]
+
+# Dockerfile for gsa service
+
+FROM greenbone/gsa:stable
+
+EXPOSE 9392
+
+VOLUME /run/gvmd
+
+CMD ["tail", "-f", "/dev/null"]

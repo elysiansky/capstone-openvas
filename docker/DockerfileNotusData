@@ -35,7 +35,6 @@
 # Use the base image from greenbone/vulnerability-tests
 FROM greenbone/notus-data
 
-
 # Define the volume
 VOLUME /mnt
 

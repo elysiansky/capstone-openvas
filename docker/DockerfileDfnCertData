@@ -1,4 +1,4 @@
-FROM greenbone/cert-bund-data
+FROM greenbone/dfn-cert-data
 
 # Define the volume
 VOLUME /mnt

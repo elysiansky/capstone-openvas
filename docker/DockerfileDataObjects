@@ -1,6 +1,5 @@
 FROM greenbone/data-objects
 
-
 # Define the volume
 VOLUME /mnt
 

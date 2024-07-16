@@ -1,11 +1,18 @@
 FROM greenbone/redis-server
 
-
 # Define the volume
-VOLUME /mnt
+#VOLUME /mnt
 
 # Set working directory
-WORKDIR /mnt
+#WORKDIR /mnt
 
 # Ensure the container keeps running
-CMD ["tail", "-f", "/dev/null"]
+#CMD ["tail", "-f", "/dev/null"]
+
+COPY redis.conf /usr/local/etc/redis/redis.conf
+
+# Expose the Redis port
+EXPOSE 6379
+
+# Start Redis with the custom configuration
+CMD ["redis-server", "/usr/local/etc/redis/redis.conf"]

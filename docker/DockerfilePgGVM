@@ -1,11 +1,58 @@
-FROM greenbone/pg-gvm
+#FROM greenbone/pg-gvm:latest
+#FROM postgres:latest
 
+# Copy your entrypoint script to the appropriate location
+#COPY docker-entrypoint.sh /usr/local/bin/
+#RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# Set the entrypoint script as the default entrypoint
+#ENTRYPOINT ["docker-entrypoint.sh"]
+# Install PostgreSQL 14
+#RUN apt-get install -y postgresql-14
 
 # Define the volume
-VOLUME /mnt
+#VOLUME /mnt
 
 # Set working directory
-WORKDIR /mnt
+#WORKDIR /mnt
 
 # Ensure the container keeps running
-CMD ["tail", "-f", "/dev/null"]
+#CMD ["tail", "-f", "/dev/null"]
+
+# Set environment variables
+#ENV PATH="/usr/lib/postgresql/14/bin"
+#ENV POSTGRES_DB=gvm
+#ENV POSTGRES_USER=admin
+#ENV POSTGRES_PASSWORD=admin
+
+# Copy initialization scripts
+#COPY ./scripts/init.sql /docker-entrypoint-initdb.d
+
+# Expose PostgreSQL default port
+#EXPOSE 5432
+
+# Start PostgreSQL
+#CMD ["postgres", "-c", "config_file=/etc/postgresql/14/main/postgresql.conf"]
+# Use the latest Greenbone pg-gvm image
+FROM postgres:latest
+
+# Install necessary tools
+RUN apt-get update && \
+    apt-get install -y \
+        sudo \
+        && \
+    rm -rf /var/lib/apt/lists/*
+# Set environment variables
+ENV PATH="/usr/lib/postgresql/14/bin"
+ENV POSTGRES_DB=gvm
+ENV POSTGRES_USER=admin
+ENV POSTGRES_PASSWORD=admin
+
+# Copy initialization scripts
+#COPY ./scripts/init.sql /docker-entrypoint-initdb.d
+
+# Expose PostgreSQL default port
+EXPOSE 5432
+
+# Start PostgreSQL
+CMD ["postgres", "-c", "/etc/postgresql/14/main/postgresql.conf"]

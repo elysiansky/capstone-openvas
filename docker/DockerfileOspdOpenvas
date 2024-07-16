@@ -1,0 +1,39 @@
+#FROM greenbone/ospd-openvas
+
+# Define the volume
+#VOLUME /mnt
+
+# Set working directory
+#WORKDIR /mnt
+
+# Ensure the container keeps running
+#CMD ["tail", "-f", "/dev/null"]
+
+# Dockerfile for ospd-openvas service
+
+#FROM greenbone/ospd-openvas:stable
+
+#CMD ["ospd-openvas", "-f", "--config", "/etc/gvm/ospd-openvas.conf", "--notus-feed-dir", "/var/lib/notus/advisories", "-m", "666"]
+
+#VOLUME /etc/openvas/gnupg
+#VOLUME /var/lib/openvas/plugins
+#VOLUME /var/lib/notus
+#VOLUME /run/ospd
+#VOLUME /run/redis/
+#VOLUME /etc/openvas/
+#VOLUME /var/log/openvas
+
+FROM greenbone/ospd-openvas:stable
+
+# Ensure the container keeps running
+CMD ["tail", "-f", "/dev/null"]
+
+# Volumes
+VOLUME /etc/openvas/gnupg
+VOLUME /var/lib/openvas/plugins
+VOLUME /var/lib/notus
+VOLUME /run/ospd
+VOLUME /run/redis/
+VOLUME /etc/openvas/
+VOLUME /var/log/openvas
+

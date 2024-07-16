@@ -1,6 +1,5 @@
 FROM greenbone/scap-data
 
-
 # Define the volume
 VOLUME /mnt
 

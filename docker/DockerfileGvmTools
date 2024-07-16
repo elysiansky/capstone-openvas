@@ -1,0 +1,20 @@
+#FROM greenbone/gvm-tools
+
+
+# Define the volume
+#VOLUME /mnt
+
+# Set working directory
+#WORKDIR /mnt
+
+# Ensure the container keeps running
+#CMD ["tail", "-f", "/dev/null"]
+
+# Dockerfile for gvm-tools service
+
+FROM greenbone/gvm-tools
+
+VOLUME /run/gvmd
+VOLUME /run/ospd
+
+CMD ["tail", "-f", "/dev/null"]

@@ -1,0 +1,13 @@
+# Dockerfile for openvasd service
+
+FROM greenbone/openvas-scanner:stable
+
+ENV LISTENING 0.0.0.0:80
+
+VOLUME /etc/openvas
+VOLUME /var/log/openvas
+VOLUME /etc/openvas/gnupg
+VOLUME /var/lib/notus
+
+CMD ["/bin/sh", "-c", "\
+    tail -f /dev/null"]

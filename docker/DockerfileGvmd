@@ -1,0 +1,65 @@
+#FROM greenbone/gvmd
+
+# Define the volume
+#VOLUME /mnt
+
+# Set working directory
+#WORKDIR /mnt
+
+# Ensure the container keeps running
+#CMD ["tail", "-f", "/dev/null"]
+
+#FROM greenbone/gvmd
+
+# Expose ports if necessary
+#EXPOSE 9390
+
+# Set working directory
+#WORKDIR /var/lib/gvm
+#WORKDIR /etc/gvm
+
+#RUN id gvmd &> /dev/null || useradd -r -s /sbin/nologin gvmd
+# Start the gvmd daemon
+#CMD ["gvmd", "--foreground", "--listen=0.0.0.0"]
+#USER gvmd
+#CMD ["gvmd", "/etc/gvm/gvmd.conf", "--foreground", "--listen=0.0.0.0"]
+
+#FROM greenbone/gvmd:latest
+
+# Expose the necessary ports
+#EXPOSE 9390
+
+# Create /etc/msmtprc and set permissions as root user
+#USER root
+#RUN mkdir -p /etc && \
+ #   touch /etc/msmtprc && \
+ #   chown gvmd:gvmd /etc/msmtprc && \
+ #   chmod 600 /etc/msmtprc
+
+# Switch to the gvmd user
+#USER gvmd
+
+# Start the gvmd daemon
+#CMD ["gvmd", "--foreground", "--listen=0.0.0.0"]
+
+FROM greenbone/gvmd:latest
+
+# Expose the necessary ports
+EXPOSE 9390
+
+# Create directories and copy entrypoint script
+RUN mkdir -p /etc && \
+    touch /etc/msmtprc && \
+    chown gvmd:gvmd /etc/msmtprc && \
+    chmod 600 /etc/msmtprc
+
+# Copy entrypoint script
+COPY ./scripts/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Switch to the gvmd user
+USER gvmd
+
+# Start the gvmd daemon through the entrypoint script
+ENTRYPOINT ["/entrypoint.sh"]
+

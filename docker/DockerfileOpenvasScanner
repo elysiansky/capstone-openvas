@@ -1,0 +1,22 @@
+#FROM greenbone/openvas-scanner:stable
+
+# Define the volume
+#VOLUME /mnt
+
+# Set working directory
+#WORKDIR /mnt
+
+# Ensure the container keeps running
+#CMD ["tail", "-f", "/dev/null"]
+
+# Dockerfile for openvas service
+
+FROM greenbone/openvas-scanner:stable
+
+VOLUME /etc/openvas
+VOLUME /var/log/openvas
+
+
+CMD ["/bin/sh", "-c", "\
+    cat /etc/openvas/openvas.conf && \
+    tail -f /var/log/openvas/openvas.log"]

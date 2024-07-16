@@ -1,0 +1,31 @@
+#FROM greenbone/openvas-scanner:stable
+
+# Create necessary directories
+#RUN mkdir -p /var/log/openvas
+
+
+# Define the volume
+#VOLUME /mnt
+
+# Set working directory
+#WORKDIR /mnt
+
+# Ensure the container keeps running
+#CMD ["tail", "-f", "/dev/null"]
+# Dockerfile for configure-openvas service
+
+FROM greenbone/openvas-scanner:stable
+
+RUN mkdir -p /var/log/openvas
+
+VOLUME /mnt
+VOLUME /var/log/openvas
+
+CMD ["/bin/sh", "-c", "\
+    printf 'table_driven_lsc = yes\nopenvasd_server = http://openvasd:80\n' > /mnt/openvas.conf && \
+    sed 's/127/128/' /etc/openvas/openvas_log.conf | sed 's/gvm/openvas/' > /mnt/openvas_log.conf && \
+    chmod 644 /mnt/openvas.conf && \
+    chmod 644 /mnt/openvas_log.conf && \
+    touch /var/log/openvas/openvas.log && \
+    chmod 666 /var/log/openvas/openvas.log && \
+    tail -f /dev/null"]
