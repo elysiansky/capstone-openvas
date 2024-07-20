@@ -39,7 +39,7 @@ FROM greenbone/notus-data
 VOLUME /mnt
 
 # Expose OpenVAS web interface port
-EXPOSE 443
+EXPOSE 9392 9390
 
 
 # Set working directory
