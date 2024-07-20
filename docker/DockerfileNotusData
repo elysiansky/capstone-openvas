@@ -38,14 +38,18 @@ FROM greenbone/notus-data
 # Define the volume
 VOLUME /mnt
 
-RUN echo '#!/bin/bash\nexit 0' > exit_zero.sh
+# Create the /scripts directory and copy the exit_zero.sh script to it
+RUN mkdir -p /scripts
+COPY /scripts/exit_zero.sh /scripts/exit_zero.sh
 
 # Make the script executable
-RUN chmod +x exit_zero.sh 
+RUN chmod +x /scripts/exit_zero.sh 
 
 # Set working directory
 WORKDIR /mnt
 
 # Ensure the container keeps running
 CMD ["tail", "-f", "/dev/null"]
+
+
 
