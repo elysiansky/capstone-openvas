@@ -4,6 +4,8 @@ FROM greenbone/gpg-data
 # Define the volume
 VOLUME /mnt
 
+EXPOSE 80
+
 # Set working directory
 WORKDIR /mnt
 
