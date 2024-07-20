@@ -90,4 +90,4 @@ To get started with deploying these OpenVAS services using Docker, follow these 
    cd capstone-openvas
 
 ## Test
-## edit notus-data
+## edit notus-data script
