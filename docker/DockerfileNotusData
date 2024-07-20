@@ -40,7 +40,7 @@ VOLUME /mnt
 
 # Create the /scripts directory and copy the exit_zero.sh script to it
 RUN mkdir -p /scripts
-COPY /scripts/exit_zero.sh /scripts/exit_zero.sh
+COPY /scripts/exit_zero.sh /scripts/exit_zero.sh 
 
 # Make the script executable
 RUN chmod +x /scripts/exit_zero.sh 
