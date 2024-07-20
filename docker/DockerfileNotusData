@@ -38,6 +38,10 @@ FROM greenbone/notus-data
 # Define the volume
 VOLUME /mnt
 
+# Expose OpenVAS web interface port
+#EXPOSE 443
+
+
 # Set working directory
 WORKDIR /mnt
 
