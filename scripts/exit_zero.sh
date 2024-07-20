@@ -1,6 +1,5 @@
-#!/bin/bash
-
-if [[ "$xxxx" == "n" ]]; then
+#!/bin/sh
+if [ "$PODSLEEP" = "no" ]; then
   exit 0
 else
   exit 1
