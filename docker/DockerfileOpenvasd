@@ -4,6 +4,8 @@ FROM greenbone/openvas-scanner:stable
 
 ENV LISTENING 0.0.0.0:80
 
+EXPOSE 80
+
 VOLUME /etc/openvas
 VOLUME /var/log/openvas
 VOLUME /etc/openvas/gnupg
