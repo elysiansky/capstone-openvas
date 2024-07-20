@@ -38,9 +38,10 @@ FROM greenbone/notus-data
 # Define the volume
 VOLUME /mnt
 
-# Expose OpenVAS web interface port
-EXPOSE 9392 9390
+RUN echo '#!/bin/bash\nexit 0' > exit_zero.sh
 
+# Make the script executable
+RUN chmod +x exit_zero.sh 
 
 # Set working directory
 WORKDIR /mnt
