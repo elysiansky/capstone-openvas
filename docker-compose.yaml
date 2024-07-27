@@ -254,11 +254,9 @@ services:
       - 9000
     networks:
       - greenbone-openvas_my_network
+    ports:
+      - "8080:80" # Expose the python app's port if needed
     privileged: true
-    environment:
-      - DISABLE_ICMP=false
-
-
 
   nginx:
     image: elysiansky/capstone-vulnerable-nginx:6fb4e92-amd64
@@ -267,8 +265,6 @@ services:
       - greenbone-openvas_my_network
     depends_on:
       - php-fpm
-    ports:
-      - "80:80" # Expose the python app's port if needed
 
   python:
     image: elysiansky/capstone-vulnerable-python:b728036-amd64
